@@ -1,6 +1,5 @@
 import socket
 
-CLIENT_PORT = 8989
 SERVER_PORT = 4343
 MAX_PACKET = 1024
 
@@ -18,7 +17,7 @@ class Player():
 
     def send_update(self, posx, posy):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(str((posx, posy)).encode(), (self.addr[0], CLIENT_PORT))
+        sock.sendto(str((posx, posy)).encode(), self.addr)
 
 def main():
     ''' Main loop '''
@@ -42,11 +41,13 @@ def main():
         found = False
         for player in player_list:
             if player.addr == addr:
+                # Update player
                 player.update_pos(posx, posy)
                 found = True
-                player.send_update(0, 0)
             else:
-                player.send_update(posx, posy)
+                # Send update to other players
+                if player.pos != (posx, posy):
+                    player.send_update(posx, posy)
 
         # New player connected
         if not found:
