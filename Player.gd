@@ -1,11 +1,22 @@
 extends KinematicBody2D
 
-var MAX_SPEED = 500
+var MAX_SPEED = 100
 var ACCELERATION = 6000
 var motion = Vector2.ZERO
+onready var ANI = get_node("Sprite/AnimationPlayer")
 
 func _physics_process(delta):
 	var axis = get_input_axis()
+	
+	if axis == Vector2.LEFT:
+		ANI.play("left")
+	elif axis == Vector2.RIGHT:
+		ANI.play("right")
+	elif axis == Vector2.DOWN:
+		ANI.play("down")
+	elif axis == Vector2.UP:
+		ANI.play("up")
+		
 	if axis == Vector2.ZERO:
 		apply_friction(ACCELERATION * delta)
 	else:
