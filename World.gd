@@ -4,6 +4,7 @@ const Other = preload("res://Other.tscn")
 
 var SERVER_PORT = 4343
 var socket = PacketPeerUDP.new()
+var pos = Vector2.ZERO
 
 var other_list = {}
 
@@ -13,8 +14,14 @@ func _init():
 	socket.listen(rand_port)
 
 func _process(delta):
-	var pos = get_node("Player").get_position()
-	send_update(str(pos))
+	var nu_pos = get_node("Player").get_position()
+	
+	# Send our position to the server if it changed
+	if nu_pos != pos:
+		send_update(str(nu_pos))
+	pos = nu_pos
+	
+	# Get other players position from the server
 	get_update()
 
 func get_update():
